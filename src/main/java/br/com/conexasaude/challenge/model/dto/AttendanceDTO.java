@@ -7,13 +7,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-
 
 @Getter
 @Setter
@@ -29,7 +30,7 @@ public class AttendanceDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JsonConstants.PATTERN_LOCAL_DATE_TIME)
     private LocalDateTime localDateTime;
 
-    @NotBlank(message = ApiMessages.NB_PATIENT)
-    @JsonProperty(value = "paciente")
-    private Patient patient;
+    @NotNull(message = ApiMessages.NB_PATIENT)
+    @JsonProperty(value = JsonConstants.VALUE_PATIENT)
+    private PatientDTO patient;
 }

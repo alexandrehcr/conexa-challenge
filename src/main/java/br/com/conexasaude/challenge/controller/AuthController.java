@@ -4,6 +4,7 @@ import br.com.conexasaude.challenge.model.dto.DoctorDTO;
 import br.com.conexasaude.challenge.service.DoctorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,6 @@ public class AuthController {
     @PostMapping(path = "/signup")
     public ResponseEntity<DoctorDTO> signup(@Valid @RequestBody DoctorDTO doctorValidationDTO) {
         DoctorDTO doctorDTO = doctorService.register(doctorValidationDTO);
-        URI uri = ServletUriComponentsBuilder.fromPath("api/v1/doctors").path("/{id}").buildAndExpand(doctorDTO.getId()).toUri();
-        return ResponseEntity.created(uri).body(doctorDTO);
+        return new ResponseEntity<>(doctorDTO, HttpStatus.CREATED);
     }
 }

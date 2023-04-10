@@ -59,7 +59,7 @@ public class DoctorDTO {
     private LocalDate dateOfBirth;
 
     @Pattern(regexp = RegexConstants.REGEX_TEL, message = ApiMessages.INV_TEL)
-    @JsonProperty(value = "telefone")
+    @JsonProperty(value = JsonConstants.VALUE_PHONE_NUMBER)
     private String phoneNumber;
 }
 

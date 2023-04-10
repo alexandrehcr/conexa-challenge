@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -36,7 +34,7 @@ public class Doctor {
     @Column(unique = true, nullable = false)
     private String email;
 
-    // `password` is a MySQL reserved keyword
+    // `password` is a reserved keyword in MySQL
     @Column(nullable = false)
     private String pwd;
 
