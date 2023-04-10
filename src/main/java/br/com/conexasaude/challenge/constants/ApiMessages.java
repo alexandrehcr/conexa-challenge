@@ -7,6 +7,7 @@ public interface ApiMessages {
     String INVALID_USERNAME_PASSWORD = "Usuário ou senha inválidos.";
     String UNSUPPORTED_JWT_EXCEPTION = "Token não suportado.";
     String MALFORMED_JWT_EXCEPTION = "Token inválido.";
+    String INVALID_JWT_EXCEPTION = "Token inválido.";
     String SIGNATURE_EXCEPTION = "Assinatura do token inválida.";
     String ILLEGAL_ARGUMENT_EXCEPTION = "Payload do token inválido.";
     String METHOD_NOT_ALLOWED = "Esperava %s, mas foi recebido %s."; // expected method / received method

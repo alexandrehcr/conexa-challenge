@@ -1,6 +1,7 @@
 package br.com.conexasaude.challenge.model;
 
 import br.com.conexasaude.challenge.model.dto.DoctorDTO;
+import br.com.conexasaude.challenge.model.dto.JwtLog;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -53,6 +55,10 @@ public class Doctor {
     @JsonIgnore
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private Set<Attendance> attendances;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    private List<JwtLog> jwtLogs;
 
 
     public DoctorDTO getDTO() {
