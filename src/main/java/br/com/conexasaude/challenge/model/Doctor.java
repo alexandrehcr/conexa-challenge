@@ -57,7 +57,7 @@ public class Doctor {
     private Set<Attendance> attendances;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<JwtLog> jwtLogs;
 
 

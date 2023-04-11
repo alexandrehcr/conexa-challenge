@@ -3,6 +3,7 @@ package br.com.conexasaude.challenge.security;
 import br.com.conexasaude.challenge.constants.ApiMessages;
 import br.com.conexasaude.challenge.exception.InvalidJwtException;
 import br.com.conexasaude.challenge.security.filter.ExceptionHandlerFilter;
+import br.com.conexasaude.challenge.service.JwtLogService;
 import br.com.conexasaude.challenge.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
 @AllArgsConstructor
 public class CustomLogoutHandler implements LogoutHandler {
 
@@ -26,7 +26,7 @@ public class CustomLogoutHandler implements LogoutHandler {
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         try {
             String jwt = jwtUtils.extractTokenFromRequest(request);
-            if (!jwtUtils.isTokenInvalidOrRevoked(jwt)) {
+            if (jwtUtils.isTokenValid(jwt)) {
                 jwtUtils.revokeToken(jwt);
 
             } else {

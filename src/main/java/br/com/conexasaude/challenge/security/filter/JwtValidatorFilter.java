@@ -1,6 +1,7 @@
 package br.com.conexasaude.challenge.security.filter;
 
 import br.com.conexasaude.challenge.constants.ApiMessages;
+import br.com.conexasaude.challenge.service.JwtLogService;
 import br.com.conexasaude.challenge.util.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,7 +37,7 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
         }
         String token = header.replace(BEARER, "");
 
-        if (jwtUtils.isTokenInvalidOrRevoked(token)) {
+        if (!jwtUtils.isTokenValid(token)) {
             ExceptionHandlerFilter.setResponse(response, HttpStatus.BAD_REQUEST, ApiMessages.INVALID_JWT_EXCEPTION);
             return;
         } else {

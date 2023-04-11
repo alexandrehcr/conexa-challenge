@@ -5,7 +5,6 @@ import br.com.conexasaude.challenge.security.filter.ExceptionHandlerFilter;
 import br.com.conexasaude.challenge.security.filter.JwtValidatorFilter;
 import br.com.conexasaude.challenge.util.JwtUtils;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,12 +24,9 @@ import static br.com.conexasaude.challenge.constants.SecurityConstants.*;
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    JwtUtils jwtUtils;
-
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(daoAuthenticationProvider(), jwtUtils);
+        CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(daoAuthenticationProvider(), jwtUtils());
         authenticationFilter.setFilterProcessesUrl(LOGIN_PATH);
 
         http
@@ -48,7 +44,7 @@ public class SecurityConfig {
                         .logoutSuccessHandler((request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK)))
                 .addFilterBefore(new ExceptionHandlerFilter(), ChannelProcessingFilter.class)
                 .addFilter(authenticationFilter)
-                .addFilterBefore(new JwtValidatorFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtValidatorFilter(jwtUtils()), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -72,6 +68,11 @@ public class SecurityConfig {
 
     @Bean
     public LogoutHandler logoutHandler() {
-        return new CustomLogoutHandler(jwtUtils);
+        return new CustomLogoutHandler(jwtUtils());
+    }
+
+    @Bean
+    public JwtUtils jwtUtils() {
+        return new JwtUtils();
     }
 }

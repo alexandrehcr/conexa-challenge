@@ -19,7 +19,7 @@ public class JwtLog {
 
     @ManyToOne
     @JoinColumn(name = "doctor_id")
-    private Doctor doctor;
+    private Doctor user;
 
     @Column(nullable = false)
     private String jwt;
