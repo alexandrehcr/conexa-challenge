@@ -22,12 +22,15 @@ public class CustomLogoutHandler implements LogoutHandler {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    JwtLogService jwtLogService;
+
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         try {
             String jwt = jwtUtils.extractTokenFromRequest(request);
-            if (jwtUtils.isTokenValid(jwt)) {
-                jwtUtils.revokeToken(jwt);
+            if (jwtLogService.isTokenValid(jwt)) {
+                jwtLogService.revokeToken(jwt);
 
             } else {
                 throw new InvalidJwtException(ApiMessages.INVALID_JWT_EXCEPTION);

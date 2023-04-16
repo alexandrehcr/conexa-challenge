@@ -3,6 +3,8 @@ package br.com.conexasaude.challenge.security;
 import br.com.conexasaude.challenge.security.filter.CustomAuthenticationFilter;
 import br.com.conexasaude.challenge.security.filter.ExceptionHandlerFilter;
 import br.com.conexasaude.challenge.security.filter.JwtValidatorFilter;
+import br.com.conexasaude.challenge.service.JwtLogService;
+import br.com.conexasaude.challenge.service.JwtLogServiceImpl;
 import br.com.conexasaude.challenge.util.JwtUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -26,7 +28,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(daoAuthenticationProvider(), jwtUtils());
+        CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(daoAuthenticationProvider(), jwtUtils(), jwtLogService());
         authenticationFilter.setFilterProcessesUrl(LOGIN_PATH);
 
         http
@@ -44,7 +46,7 @@ public class SecurityConfig {
                         .logoutSuccessHandler((request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK)))
                 .addFilterBefore(new ExceptionHandlerFilter(), ChannelProcessingFilter.class)
                 .addFilter(authenticationFilter)
-                .addFilterBefore(new JwtValidatorFilter(jwtUtils()), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtValidatorFilter(jwtUtils(), jwtLogService()), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -67,12 +69,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public LogoutHandler logoutHandler() {
-        return new CustomLogoutHandler(jwtUtils());
+    public JwtLogService jwtLogService() {
+        return new JwtLogServiceImpl();
     }
 
     @Bean
     public JwtUtils jwtUtils() {
         return new JwtUtils();
+    }
+
+    @Bean
+    public LogoutHandler logoutHandler() {
+        return new CustomLogoutHandler(jwtUtils(), jwtLogService());
     }
 }

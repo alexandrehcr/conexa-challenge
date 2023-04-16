@@ -25,43 +25,21 @@ import static br.com.conexasaude.challenge.constants.SecurityConstants.JWT_KEY;
 public class JwtUtils {
 
     private final SecretKey secretKey = Keys.hmacShaKeyFor(JWT_KEY.getBytes(StandardCharsets.UTF_8));
-
-    @Autowired
-    private JwtLogService jwtLogService;
-
     private final String CLAIM_ID = "id";
 
-    public String createToken(Authentication authentication) {
-        Long userId = jwtLogService.getFromUser(authentication, Doctor::getId);
-        Date now = new Date();
-        Date expiration = new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME);
 
-        String token =  Jwts.builder()
+    public String createToken(String username, Date now, Date expiration) {
+        return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
-                .addClaims(Map.of(CLAIM_ID, userId))
-                .setSubject(authentication.getName())
+                .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .signWith(secretKey)
                 .compact();
-
-        // Any token a user may already have will be expired on saving
-        jwtLogService.saveJwtLog(now, expiration, userId, token);
-        return token;
     }
 
     public Long extractUserId(String token) {
         return extractClaim(token, claims -> claims.get(CLAIM_ID, Long.class));
-    }
-
-    public void revokeToken(String token) {
-        Long userId = extractUserId(token);
-        jwtLogService.revokeTokenByUserId(userId);
-    }
-
-    public boolean isTokenValid(String token) {
-        Long userId = extractUserId(token);
-        return jwtLogService.isTokenValid(token, userId);
     }
 
     public String extractTokenFromRequest(ServletRequest request) {

@@ -45,7 +45,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             setResponse(response, HttpStatus.UNAUTHORIZED, UNSUPPORTED_JWT_EXCEPTION);
 
         } catch (MalformedJwtException ex) {
-            setResponse(response, HttpStatus.BAD_REQUEST, MALFORMED_JWT_EXCEPTION);
+            setResponse(response, HttpStatus.UNAUTHORIZED, MALFORMED_JWT_EXCEPTION);
 
         } catch (SignatureException ex) {
             setResponse(response, HttpStatus.UNAUTHORIZED, SIGNATURE_EXCEPTION);

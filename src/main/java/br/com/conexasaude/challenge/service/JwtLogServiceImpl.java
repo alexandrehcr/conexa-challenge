@@ -4,15 +4,15 @@ import br.com.conexasaude.challenge.model.Doctor;
 import br.com.conexasaude.challenge.model.dto.JwtLog;
 import br.com.conexasaude.challenge.repository.DoctorRepository;
 import br.com.conexasaude.challenge.repository.JwtLogRepository;
+import br.com.conexasaude.challenge.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
 import java.util.function.Function;
 
-@Service
+// declared bean in the SecurityConfig file
 public class JwtLogServiceImpl implements JwtLogService {
 
     @Autowired
@@ -21,8 +21,12 @@ public class JwtLogServiceImpl implements JwtLogService {
     @Autowired
     private JwtLogRepository jwtLogRepository;
 
-    public JwtLog saveJwtLog(Date now, Date expiration, Long userId, String token) {
-        Doctor user = doctorRepository.findById(userId).get();
+    @Autowired
+    private JwtUtils jwtUtils;
+
+
+    public JwtLog saveJwtLog(String username, String token, Date now, Date expiration) {
+        Doctor user = doctorRepository.findByEmail(username).get();
 
         JwtLog jwtLog = JwtLog.builder()
                 .jwt(token)
@@ -31,8 +35,6 @@ public class JwtLogServiceImpl implements JwtLogService {
                 .user(user)
                 .build();
 
-        // Expires a previous token the user may have
-        revokeTokenByUserId(userId);
         return jwtLogRepository.save(jwtLog);
     }
 
@@ -44,7 +46,18 @@ public class JwtLogServiceImpl implements JwtLogService {
         });
     }
 
-    public boolean isTokenValid(String token, Long userId) {
+    public void revokeToken(String token) {
+        long id = jwtUtils.extractUserId(token);
+        revokeTokenByUserId(id);
+    }
+
+    public void revokeTokenByUsername(String username) {
+        long id = doctorRepository.findByEmail(username).get().getId();
+        revokeTokenByUserId(id);
+    }
+
+    public boolean isTokenValid(String token) {
+        long userId = jwtUtils.extractUserId(token);
         Optional<JwtLog> log = jwtLogRepository.findCurrentLogByUserId(userId);
         if (log.isEmpty()) {
             return false;

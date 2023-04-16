@@ -28,6 +28,9 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    JwtLogService jwtLogService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -37,8 +40,8 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
         }
         String token = header.replace(BEARER, "");
 
-        if (!jwtUtils.isTokenValid(token)) {
-            ExceptionHandlerFilter.setResponse(response, HttpStatus.BAD_REQUEST, ApiMessages.INVALID_JWT_EXCEPTION);
+        if (!jwtLogService.isTokenValid(token)) {
+            ExceptionHandlerFilter.setResponse(response, HttpStatus.UNAUTHORIZED, ApiMessages.INVALID_JWT_EXCEPTION);
             return;
         } else {
             // Token is also validated when parsing claims

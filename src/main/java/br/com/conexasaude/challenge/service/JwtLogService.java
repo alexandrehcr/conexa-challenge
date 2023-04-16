@@ -10,8 +10,10 @@ import java.util.function.Function;
 
 @Service
 public interface JwtLogService {
-  JwtLog saveJwtLog(Date now, Date expiration, Long userId, String token);
+  JwtLog saveJwtLog(String username, String token, Date now, Date expiration);
+  void revokeToken(String token);
   void revokeTokenByUserId(Long userId);
-  boolean isTokenValid(String token, Long userId);
+  void revokeTokenByUsername(String username);
+  boolean isTokenValid(String token);
   <T> T getFromUser(Authentication authentication, Function<Doctor, T> function);
 }

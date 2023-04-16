@@ -44,9 +44,15 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(new DefaultError(httpStatus, message), httpStatus);
     }
 
-    @ExceptionHandler({BadCredentialsException.class, BadRequestException.class, AttendanceException.class})
-    public ResponseEntity<Object> handleBadCredentials(RuntimeException ex){
+    @ExceptionHandler({BadRequestException.class, AttendanceException.class})
+    public ResponseEntity<Object> handleBadRequests(RuntimeException ex){
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(new DefaultError(httpStatus, ex.getMessage()), httpStatus);
+    }
+
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<Object> handleBadCredentials(RuntimeException ex){
+        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
         return new ResponseEntity<>(new DefaultError(httpStatus, ex.getMessage()), httpStatus);
     }
 
