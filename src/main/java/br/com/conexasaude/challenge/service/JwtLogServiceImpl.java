@@ -38,17 +38,21 @@ public class JwtLogServiceImpl implements JwtLogService {
         return jwtLogRepository.save(jwtLog);
     }
 
-    public void revokeTokenByUserId(Long userId) {
-        Optional<JwtLog> savedLog = jwtLogRepository.findCurrentLogByUserId(userId);
-        savedLog.ifPresent(log -> {
-            log.setRevokedAt(new Date());
-            jwtLogRepository.save(log);
-        });
+    public boolean isTokenValid(String token) {
+        String username = jwtUtils.extractUsername(token);
+        Optional<Doctor> user = doctorRepository.findByEmail(username);
+
+        Optional<JwtLog> log = jwtLogRepository.findCurrentLogByUserId(user.get().getId());
+        if (log.isEmpty()) {
+            return false;
+        } else {
+            return log.get().getJwt().equals(token);
+        }
     }
 
     public void revokeToken(String token) {
-        long id = jwtUtils.extractUserId(token);
-        revokeTokenByUserId(id);
+        String username = jwtUtils.extractUsername(token);
+        revokeTokenByUsername(username);
     }
 
     public void revokeTokenByUsername(String username) {
@@ -56,14 +60,12 @@ public class JwtLogServiceImpl implements JwtLogService {
         revokeTokenByUserId(id);
     }
 
-    public boolean isTokenValid(String token) {
-        long userId = jwtUtils.extractUserId(token);
-        Optional<JwtLog> log = jwtLogRepository.findCurrentLogByUserId(userId);
-        if (log.isEmpty()) {
-            return false;
-        } else {
-            return log.get().getJwt().equals(token);
-        }
+    public void revokeTokenByUserId(Long userId) {
+        Optional<JwtLog> savedLog = jwtLogRepository.findCurrentLogByUserId(userId);
+        savedLog.ifPresent(log -> {
+            log.setRevokedAt(new Date());
+            jwtLogRepository.save(log);
+        });
     }
 
     public <T> T getFromUser(Authentication authentication, Function<Doctor, T> function) {

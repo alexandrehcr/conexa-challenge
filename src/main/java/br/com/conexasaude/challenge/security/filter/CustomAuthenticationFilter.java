@@ -54,11 +54,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Date now = new Date();
         Date expiration = new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME);
 
+        // Expires a previous token the user may have before create a new one
+        jwtLogService.revokeTokenByUsername(username);
+        
         final String jwt = jwtUtils.createToken(username, now, expiration);
         jwtLogService.saveJwtLog(username, jwt, now, expiration);
-
-        // Expires a previous token the user may have
-        jwtLogService.revokeTokenByUsername(username);
 
         response.setHeader(HttpHeaders.AUTHORIZATION, BEARER + jwt);
         response.getWriter().write(jwt);

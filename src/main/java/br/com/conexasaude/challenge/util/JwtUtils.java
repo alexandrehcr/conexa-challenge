@@ -25,7 +25,6 @@ import static br.com.conexasaude.challenge.constants.SecurityConstants.JWT_KEY;
 public class JwtUtils {
 
     private final SecretKey secretKey = Keys.hmacShaKeyFor(JWT_KEY.getBytes(StandardCharsets.UTF_8));
-    private final String CLAIM_ID = "id";
 
 
     public String createToken(String username, Date now, Date expiration) {
@@ -36,10 +35,6 @@ public class JwtUtils {
                 .setExpiration(expiration)
                 .signWith(secretKey)
                 .compact();
-    }
-
-    public Long extractUserId(String token) {
-        return extractClaim(token, claims -> claims.get(CLAIM_ID, Long.class));
     }
 
     public String extractTokenFromRequest(ServletRequest request) {
