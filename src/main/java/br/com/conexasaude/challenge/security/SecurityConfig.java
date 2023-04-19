@@ -1,6 +1,5 @@
 package br.com.conexasaude.challenge.security;
 
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,11 +17,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable()
                 .headers().frameOptions().disable()
-                .and().authorizeHttpRequests().requestMatchers(PathRequest.toH2Console()).permitAll()
-                .and().authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/", "/api/v1/signup", "/api/v1/login").permitAll()
-                        .requestMatchers("/**").authenticated()
-                );
+                .and().authorizeHttpRequests().anyRequest().permitAll();
 
         return http.build();
     }
