@@ -6,6 +6,7 @@ import br.com.conexasaude.challenge.model.Doctor;
 import br.com.conexasaude.challenge.model.Patient;
 import br.com.conexasaude.challenge.model.dto.AttendanceDTO;
 import br.com.conexasaude.challenge.model.dto.DoctorDTO;
+import br.com.conexasaude.challenge.model.dto.PatientDTO;
 import br.com.conexasaude.challenge.repository.DoctorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -121,12 +122,15 @@ public class DoctorServiceTest {
         // Arrange
         Doctor doctor = mock(Doctor.class);
 
+        PatientDTO patientDTO = new PatientDTO();
+        patientDTO.setCpf("0");
+
         Patient patient = new Patient();
-        patient.setCpf("0");
+        patient.setCpf(patientDTO.getCpf());
 
         AttendanceDTO attendanceDTO = new AttendanceDTO();
         attendanceDTO.setLocalDateTime(LocalDateTime.now());
-        attendanceDTO.setPatient(patient);
+        attendanceDTO.setPatient(patientDTO);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken("principal", "credentials", new ArrayList<>());
         SecurityContextHolder.getContext().setAuthentication(authentication);
