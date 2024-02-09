@@ -12,7 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,24 +23,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import static br.com.conexasaude.challenge.constants.SecurityConstants.*;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(daoAuthenticationProvider(), jwtUtils(), jwtLogService());
         authenticationFilter.setFilterProcessesUrl(LOGIN_PATH);
 
         http
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().headers().frameOptions().disable()
-                .and().authorizeHttpRequests().requestMatchers(PathRequest.toH2Console()).permitAll()
-                .and().authorizeHttpRequests(httpRequest -> httpRequest
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers(REGISTRATION_PATH, LOGIN_PATH, HOME_PATH).permitAll()
                         .requestMatchers("/**").authenticated())
-                .formLogin().disable()
+                .formLogin(AbstractHttpConfigurer::disable)
                 .logout(logoutRequest -> logoutRequest.logoutUrl(LOGOUT_PATH)
                         .addLogoutHandler(logoutHandler())
                         .logoutSuccessUrl(HOME_PATH)
