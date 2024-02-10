@@ -26,7 +26,7 @@ public class PatientServiceTest {
     PatientRepository patientRepository;
 
     @InjectMocks
-    PatientServiceImpl patientService;
+    PatientService patientService;
 
 
     @DisplayName("Find by CPF - positive scenario")

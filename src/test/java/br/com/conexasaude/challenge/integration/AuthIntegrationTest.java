@@ -20,8 +20,8 @@ import java.util.TreeMap;
 
 import static br.com.conexasaude.challenge.constants.ApiMessages.INVALID_USERNAME_PASSWORD;
 import static br.com.conexasaude.challenge.constants.JsonConstants.*;
-import static br.com.conexasaude.challenge.util.ServiceUtils.removeCpfMask;
-import static br.com.conexasaude.challenge.util.ServiceUtils.removePhoneMask;
+import static br.com.conexasaude.challenge.util.RemoveMask.removeCpfMask;
+import static br.com.conexasaude.challenge.util.RemoveMask.removePhoneMask;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.*;

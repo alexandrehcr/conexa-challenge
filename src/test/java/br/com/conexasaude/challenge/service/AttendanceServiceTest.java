@@ -25,7 +25,7 @@ public class AttendanceServiceTest {
     AttendanceRepository attendanceRepository;
 
     @InjectMocks
-    AttendanceServiceImpl attendanceService;
+    AttendanceService attendanceService;
 
 
     // There's no unique constraint violation

@@ -41,13 +41,13 @@ public class DoctorServiceTest {
     PasswordEncoder passwordEncoder;
 
     @Mock
-    PatientServiceImpl patientService;
+    PatientService patientService;
 
     @Mock
-    AttendanceServiceImpl attendanceService;
+    AttendanceService attendanceService;
 
     @InjectMocks
-    DoctorServiceImpl doctorService;
+    DoctorService doctorService;
 
     DoctorDTO registerDTO;
 

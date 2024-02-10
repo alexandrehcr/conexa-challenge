@@ -7,6 +7,5 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
-
     List<Attendance> findAllByDoctorEmail(String email);
 }

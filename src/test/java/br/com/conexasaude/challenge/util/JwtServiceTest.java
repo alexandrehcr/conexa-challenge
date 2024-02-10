@@ -1,5 +1,6 @@
 package br.com.conexasaude.challenge.util;
 
+import br.com.conexasaude.challenge.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,10 +17,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class JwtUtilsTest {
+public class JwtServiceTest {
 
     @InjectMocks
-    JwtUtils jwtUtils;
+    JwtService jwtService;
     
 
     @DisplayName("Create JWT")
@@ -29,7 +30,7 @@ public class JwtUtilsTest {
         final Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10);
 
         // Act
-        String jwt = jwtUtils.createToken("username", new Date(), expiration);
+        String jwt = jwtService.createToken("username", new Date(), expiration);
 
         // Assert
         assertNotNull(jwt);
@@ -45,7 +46,7 @@ public class JwtUtilsTest {
         given(requestMock.getHeader(HttpHeaders.AUTHORIZATION)).willReturn("Bearer token");
 
         // Act
-        String token = jwtUtils.extractTokenFromRequest(requestMock);
+        String token = jwtService.extractTokenFromRequest(requestMock);
 
         // Assert
         assertNotNull(token);

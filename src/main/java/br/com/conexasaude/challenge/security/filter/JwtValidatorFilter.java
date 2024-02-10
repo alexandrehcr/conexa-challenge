@@ -2,13 +2,12 @@ package br.com.conexasaude.challenge.security.filter;
 
 import br.com.conexasaude.challenge.constants.ApiMessages;
 import br.com.conexasaude.challenge.service.JwtLogService;
-import br.com.conexasaude.challenge.util.JwtUtils;
+import br.com.conexasaude.challenge.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,10 +24,7 @@ import static br.com.conexasaude.challenge.constants.SecurityConstants.HOME_PATH
 @AllArgsConstructor
 public class JwtValidatorFilter extends OncePerRequestFilter {
 
-    @Autowired
-    JwtUtils jwtUtils;
-
-    @Autowired
+    JwtService jwtService;
     JwtLogService jwtLogService;
 
     @Override
@@ -45,7 +41,7 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
             return;
         } else {
             // Token is also validated when parsing claims
-            String username = jwtUtils.extractUsername(token);
+            String username = jwtService.extractUsername(token);
             Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(username, null, Arrays.asList());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

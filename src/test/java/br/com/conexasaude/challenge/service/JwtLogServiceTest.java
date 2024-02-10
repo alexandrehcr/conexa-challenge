@@ -4,7 +4,6 @@ import br.com.conexasaude.challenge.model.Doctor;
 import br.com.conexasaude.challenge.model.dto.JwtLog;
 import br.com.conexasaude.challenge.repository.DoctorRepository;
 import br.com.conexasaude.challenge.repository.JwtLogRepository;
-import br.com.conexasaude.challenge.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,13 +29,13 @@ public class JwtLogServiceTest {
     JwtLogRepository jwtLogRepository;
 
     @Mock
-    JwtUtils jwtUtils;
+    JwtService jwtService;
 
     @Mock
     DoctorRepository doctorRepository;
 
     @InjectMocks
-    JwtLogServiceImpl jwtLogService;
+    JwtLogService jwtLogService;
 
     JwtLog jwtLog;
     final String jwt = "test.jwt.token";
@@ -47,7 +46,7 @@ public class JwtLogServiceTest {
     public void setup() {
         jwtLog = JwtLog.builder().jwt(jwt).issuedAt(new Date()).expiration(expiration).user(mock(Doctor.class)).build();
 
-        lenient().when(jwtUtils.extractUsername(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
+        lenient().when(jwtService.extractUsername(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
         lenient().when(doctorRepository.findByEmail(anyString())).thenReturn(Optional.of(mock(Doctor.class)));
     }
 

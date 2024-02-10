@@ -1,6 +1,6 @@
 package br.com.conexasaude.challenge.util;
 
-public class ServiceUtils {
+public record RemoveMask () {
     public static String removeCpfMask(String string) {
         return string.replaceAll("[ .-]", "");
     }

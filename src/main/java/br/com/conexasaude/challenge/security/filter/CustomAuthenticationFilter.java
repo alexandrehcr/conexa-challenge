@@ -2,14 +2,14 @@ package br.com.conexasaude.challenge.security.filter;
 
 import br.com.conexasaude.challenge.model.dto.AuthenticationRequest;
 import br.com.conexasaude.challenge.service.JwtLogService;
-import br.com.conexasaude.challenge.util.JwtUtils;
+import br.com.conexasaude.challenge.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,16 +24,12 @@ import java.util.Date;
 import static br.com.conexasaude.challenge.constants.SecurityConstants.BEARER;
 import static br.com.conexasaude.challenge.constants.SecurityConstants.JWT_EXPIRATION_TIME;
 
+@NoArgsConstructor
 @AllArgsConstructor
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    @Autowired
     DaoAuthenticationProvider daoAuthenticationProvider;
-
-    @Autowired
-    JwtUtils jwtUtils;
-
-    @Autowired
+    JwtService jwtService;
     JwtLogService jwtLogService;
 
     @Override
@@ -57,7 +53,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         // Expires a previous token the user may have before create a new one
         jwtLogService.revokeTokenByUsername(username);
         
-        final String jwt = jwtUtils.createToken(username, now, expiration);
+        final String jwt = jwtService.createToken(username, now, expiration);
         jwtLogService.saveJwtLog(username, jwt, now, expiration);
 
         response.setHeader(HttpHeaders.AUTHORIZATION, BEARER + jwt);

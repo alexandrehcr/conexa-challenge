@@ -1,4 +1,4 @@
-package br.com.conexasaude.challenge.util;
+package br.com.conexasaude.challenge.service;
 
 import br.com.conexasaude.challenge.constants.SecurityConstants;
 import io.jsonwebtoken.Claims;
@@ -7,6 +7,8 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -14,11 +16,12 @@ import java.util.Date;
 import java.util.function.Function;
 
 import static br.com.conexasaude.challenge.constants.SecurityConstants.JWT_KEY;
+import static io.jsonwebtoken.security.Keys.hmacShaKeyFor;
 
+@Service
+public class JwtService {
 
-public class JwtUtils {
-
-    private final SecretKey secretKey = Keys.hmacShaKeyFor(JWT_KEY.getBytes(StandardCharsets.UTF_8));
+    private final SecretKey secretKey = hmacShaKeyFor(JWT_KEY.getBytes(StandardCharsets.UTF_8));
 
 
     public String createToken(String username, Date now, Date expiration) {

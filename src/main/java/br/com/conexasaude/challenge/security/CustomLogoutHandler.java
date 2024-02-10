@@ -4,31 +4,28 @@ import br.com.conexasaude.challenge.constants.ApiMessages;
 import br.com.conexasaude.challenge.exception.InvalidJwtException;
 import br.com.conexasaude.challenge.security.filter.ExceptionHandlerFilter;
 import br.com.conexasaude.challenge.service.JwtLogService;
-import br.com.conexasaude.challenge.util.JwtUtils;
+import br.com.conexasaude.challenge.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@NoArgsConstructor
 @AllArgsConstructor
 public class CustomLogoutHandler implements LogoutHandler {
 
-    @Autowired
-    JwtUtils jwtUtils;
-
-    @Autowired
+    JwtService jwtService;
     JwtLogService jwtLogService;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         try {
-            String jwt = jwtUtils.extractTokenFromRequest(request);
+            String jwt = jwtService.extractTokenFromRequest(request);
             if (jwtLogService.isTokenValid(jwt)) {
                 jwtLogService.revokeToken(jwt);
 
