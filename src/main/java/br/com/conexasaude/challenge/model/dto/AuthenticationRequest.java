@@ -1,10 +1,11 @@
 package br.com.conexasaude.challenge.model.dto;
 
-import br.com.conexasaude.challenge.constants.JsonConstants;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static br.com.conexasaude.challenge.constants.json.JsonFields.PASSWORD;
 
 @Getter
 @NoArgsConstructor
@@ -13,6 +14,6 @@ public class AuthenticationRequest {
 
     private String email;
 
-    @JsonProperty(value = JsonConstants.VALUE_PASSWORD)
+    @JsonProperty(value = PASSWORD)
     private String password;
 }

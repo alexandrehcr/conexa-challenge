@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
-public class JwtLogRepositoryTest {
+class JwtLogRepositoryTest {
 
     @Autowired
     private JwtLogRepository jwtLogRepository;
@@ -29,7 +29,7 @@ public class JwtLogRepositoryTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         Doctor doctor1 = new Doctor();
         doctor1.setId(1L);
         Doctor doctor2 = new Doctor();
@@ -46,7 +46,7 @@ public class JwtLogRepositoryTest {
 
     @DisplayName("Save logs")
     @Test
-    public void givenJwtLogs_whenSaving_thenPersistLogs() {
+    void givenJwtLogs_whenSaving_thenPersistLogs() {
         /* single record saving */
         JwtLog log = jwtLogRepository.save(doc1CurrentLog);
 
@@ -60,7 +60,7 @@ public class JwtLogRepositoryTest {
 
     @DisplayName("Find all saved logs")
     @Test
-    public void givenJwtLogsList_whenFindAll_thenReturnAllLogs() {
+    void givenJwtLogsList_whenFindAll_thenReturnAllLogs() {
         // Arrange
         jwtLogRepository.saveAll(List.of(doc1CurrentLog, doc1ExpiredLog, doc2CurrentLog));
 
@@ -73,7 +73,7 @@ public class JwtLogRepositoryTest {
 
     @DisplayName("Find user's current JWT log")
     @Test
-    public void givenUserId_whenFindCurrentLogByUserId_thenReturnCurrentLog() {
+    void givenUserId_whenFindCurrentLogByUserId_thenReturnCurrentLog() {
         // Arrange
         jwtLogRepository.saveAll(List.of(doc1CurrentLog, doc1ExpiredLog, doc2CurrentLog));
 

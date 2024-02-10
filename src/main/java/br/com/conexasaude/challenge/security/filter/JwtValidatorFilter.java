@@ -1,6 +1,5 @@
 package br.com.conexasaude.challenge.security.filter;
 
-import br.com.conexasaude.challenge.constants.ApiMessages;
 import br.com.conexasaude.challenge.service.JwtLogService;
 import br.com.conexasaude.challenge.service.JwtService;
 import jakarta.servlet.FilterChain;
@@ -20,6 +19,7 @@ import java.util.Arrays;
 
 import static br.com.conexasaude.challenge.constants.SecurityConstants.BEARER;
 import static br.com.conexasaude.challenge.constants.SecurityConstants.HOME_PATH;
+import static br.com.conexasaude.challenge.constants.apimessages.ExceptionMessages.INVALID_JWT_EXCEPTION;
 
 @AllArgsConstructor
 public class JwtValidatorFilter extends OncePerRequestFilter {
@@ -37,7 +37,7 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
         String token = header.replace(BEARER, "");
 
         if (!jwtLogService.isTokenValid(token)) {
-            ExceptionHandlerFilter.setResponse(response, HttpStatus.UNAUTHORIZED, ApiMessages.INVALID_JWT_EXCEPTION);
+            ExceptionHandlerFilter.setResponse(response, HttpStatus.UNAUTHORIZED, INVALID_JWT_EXCEPTION);
             return;
         } else {
             // Token is also validated when parsing claims

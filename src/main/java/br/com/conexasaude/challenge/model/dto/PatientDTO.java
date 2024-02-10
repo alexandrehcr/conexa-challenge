@@ -1,7 +1,5 @@
 package br.com.conexasaude.challenge.model.dto;
 
-import br.com.conexasaude.challenge.constants.ApiMessages;
-import br.com.conexasaude.challenge.constants.JsonConstants;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,17 +9,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 
+import static br.com.conexasaude.challenge.constants.apimessages.ValidationConstants.INV_CPF;
+import static br.com.conexasaude.challenge.constants.apimessages.ValidationConstants.NB_NAME;
+import static br.com.conexasaude.challenge.constants.json.JsonFields.FIRST_NAME;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatientDTO {
 
-    @NotBlank(message = ApiMessages.NB_NAME)
-    @JsonProperty(value = JsonConstants.VALUE_FIRST_NAME)
+    @NotBlank(message = NB_NAME)
+    @JsonProperty(value = FIRST_NAME)
     private String patientName;
 
-    @NotNull(message = ApiMessages.INV_CPF)
-    @CPF(message = ApiMessages.INV_CPF)
+    @NotNull(message = INV_CPF)
+    @CPF(message = INV_CPF)
     private String cpf;
 }

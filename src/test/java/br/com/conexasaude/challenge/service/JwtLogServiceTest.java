@@ -23,7 +23,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class JwtLogServiceTest {
+class JwtLogServiceTest {
 
     @Mock
     JwtLogRepository jwtLogRepository;
@@ -43,7 +43,7 @@ public class JwtLogServiceTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         jwtLog = JwtLog.builder().jwt(jwt).issuedAt(new Date()).expiration(expiration).user(mock(Doctor.class)).build();
 
         lenient().when(jwtService.extractUsername(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
@@ -52,7 +52,7 @@ public class JwtLogServiceTest {
 
     @DisplayName("Create log")
     @Test
-    public void givenTokenData_whenSaveLog_thenRegisterSave() {
+    void givenTokenData_whenSaveLog_thenRegisterSave() {
         // Arrange
         given(jwtLogRepository.save(any(JwtLog.class))).willAnswer(invocation -> invocation.getArgument(0));
 
@@ -69,7 +69,7 @@ public class JwtLogServiceTest {
 
     @DisplayName("Revoke token when token exists")
     @Test
-    public void givenUserId_whenTokenIsRevoked_thenUpdateRevokeAtField() {
+    void givenUserId_whenTokenIsRevoked_thenUpdateRevokeAtField() {
         // Arrange
         when(jwtLogRepository.findCurrentLogByUserId(anyLong())).thenReturn(Optional.of(jwtLog));
 
@@ -84,7 +84,7 @@ public class JwtLogServiceTest {
     // Valid token and user has log
     @DisplayName("Check token validity - positive scenario")
     @Test
-    public void givenValidToken_whenTokenValidityIsVerified_thenReturnTrue() {
+    void givenValidToken_whenTokenValidityIsVerified_thenReturnTrue() {
         //Arrange
         given(jwtLogRepository.findCurrentLogByUserId(anyLong())).willReturn(Optional.of(jwtLog));
 
@@ -99,7 +99,7 @@ public class JwtLogServiceTest {
     // Invalid token or no log for the user
     @DisplayName("Check token validity - negative scenario")
     @Test
-    public void givenInvalidToken_whenTokenIsVerified_thenReturnFalse() {
+    void givenInvalidToken_whenTokenIsVerified_thenReturnFalse() {
         /* invalid token */
         // Arrange
         given(jwtLogRepository.findCurrentLogByUserId(anyLong())).willReturn(Optional.of(jwtLog));
@@ -125,7 +125,7 @@ public class JwtLogServiceTest {
 
     @DisplayName("Get data from the authenticated user")
     @Test
-    public void givenAuthenticationObject_whenProvidedValidSupplier_thenReturnRequestedField() {
+    void givenAuthenticationObject_whenProvidedValidSupplier_thenReturnRequestedField() {
         // Arrange
         Authentication authentication = mock(UsernamePasswordAuthenticationToken.class);
         String email = "test@email.com";

@@ -1,6 +1,6 @@
 package br.com.conexasaude.challenge.service;
 
-import br.com.conexasaude.challenge.constants.ApiMessages;
+import br.com.conexasaude.challenge.constants.apimessages.UniqueConstraintViolationMessages;
 import br.com.conexasaude.challenge.model.Attendance;
 import br.com.conexasaude.challenge.model.Doctor;
 import br.com.conexasaude.challenge.model.Patient;
@@ -32,7 +32,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class DoctorServiceTest {
+class DoctorServiceTest {
 
     @Mock
     DoctorRepository doctorRepository;
@@ -53,7 +53,7 @@ public class DoctorServiceTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         // This object cannot be mocked because its field are going to be used from a static and a private method.
         registerDTO = new DoctorDTO();
         registerDTO.setCpf("0");
@@ -66,7 +66,7 @@ public class DoctorServiceTest {
     // so there's no need to check invalid cpf, email, password, etc.
     @DisplayName("Doctor's registration test - positive scenario")
     @Test
-    public void givenValidRegistrationData_whenSaveDoctor_thenReturnDTOFromSavedDoctor() {
+    void givenValidRegistrationData_whenSaveDoctor_thenReturnDTOFromSavedDoctor() {
         // Arrange
         given(doctorRepository.existsByEmail(registerDTO.getEmail())).willReturn(false);
         given(doctorRepository.existsByCpf(registerDTO.getCpf())).willReturn(false);
@@ -84,14 +84,14 @@ public class DoctorServiceTest {
 
     @DisplayName("Doctor's registration test rest - negative scenario")
     @Test
-    public void givenInvalidRegistrationData_whenSaveDoctor_thenThrowException() {
+    void givenInvalidRegistrationData_whenSaveDoctor_thenThrowException() {
         /* Only email is already registered */
         // Arrange
         given(doctorRepository.existsByEmail(registerDTO.getEmail())).willReturn(true);
         given(doctorRepository.existsByCpf(registerDTO.getCpf())).willReturn(false);
 
         // Act and assert
-        assertThrows(DataIntegrityViolationException.class, () -> doctorService.register(registerDTO), ApiMessages.EMAIL_UNIQUE_CONSTRAINT_VIOLATION);
+        assertThrows(DataIntegrityViolationException.class, () -> doctorService.register(registerDTO), UniqueConstraintViolationMessages.EMAIL_UNIQUE_CONSTRAINT_VIOLATION);
 
 
         /* Only CPF is already registered */
@@ -100,7 +100,7 @@ public class DoctorServiceTest {
         given(doctorRepository.existsByCpf(registerDTO.getCpf())).willReturn(true);
 
         // Act and assert
-        assertThrows(DataIntegrityViolationException.class, () -> doctorService.register(registerDTO), ApiMessages.CPF_UNIQUE_CONSTRAINT_VIOLATION);
+        assertThrows(DataIntegrityViolationException.class, () -> doctorService.register(registerDTO), UniqueConstraintViolationMessages.CPF_UNIQUE_CONSTRAINT_VIOLATION);
 
 
         /* Both email and CPF are already registered */
@@ -109,7 +109,7 @@ public class DoctorServiceTest {
         given(doctorRepository.existsByCpf(registerDTO.getCpf())).willReturn(true);
 
         // Act and assert
-        assertThrows(DataIntegrityViolationException.class, () -> doctorService.register(registerDTO), ApiMessages.EMAIL_AND_CPF_UNIQUE_CONSTRAINT_VIOLATION);
+        assertThrows(DataIntegrityViolationException.class, () -> doctorService.register(registerDTO), UniqueConstraintViolationMessages.EMAIL_AND_CPF_UNIQUE_CONSTRAINT_VIOLATION);
 
         // Assert that any invalid object was saved
         verify(doctorRepository, never()).save(any(Doctor.class));
@@ -118,7 +118,7 @@ public class DoctorServiceTest {
 
     @DisplayName("Attendance's registration test")
     @Test
-    public void givenAttendanceDTO_whenSaveAttendance_thenReturnDTOFromSavedAttendance() {
+    void givenAttendanceDTO_whenSaveAttendance_thenReturnDTOFromSavedAttendance() {
         // Arrange
         Doctor doctor = mock(Doctor.class);
 

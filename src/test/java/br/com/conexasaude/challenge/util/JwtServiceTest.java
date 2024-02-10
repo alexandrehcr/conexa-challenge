@@ -17,7 +17,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class JwtServiceTest {
+class JwtServiceTest {
 
     @InjectMocks
     JwtService jwtService;
@@ -25,7 +25,7 @@ public class JwtServiceTest {
 
     @DisplayName("Create JWT")
     @Test
-    public void givenTokenData_whenCreateToken_thenReturnJwt() {
+    void givenTokenData_whenCreateToken_thenReturnJwt() {
 
         final Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10);
 
@@ -40,7 +40,7 @@ public class JwtServiceTest {
 
     @DisplayName("Extract token from request")
     @Test
-    public void givenRequestWithAuthorizationHeader_whenTokenIsExtracted_thenReturnToken() {
+    void givenRequestWithAuthorizationHeader_whenTokenIsExtracted_thenReturnToken() {
         // Arrange
         HttpServletRequest requestMock = mock(HttpServletRequest.class);
         given(requestMock.getHeader(HttpHeaders.AUTHORIZATION)).willReturn("Bearer token");

@@ -20,7 +20,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class PatientServiceTest {
+class PatientServiceTest {
 
     @Mock
     PatientRepository patientRepository;
@@ -31,7 +31,7 @@ public class PatientServiceTest {
 
     @DisplayName("Find by CPF - positive scenario")
     @Test
-    public void givenValidCpf_whenFindByCpf_thenReturnPatient() {
+    void givenValidCpf_whenFindByCpf_thenReturnPatient() {
         // Arrange
         Patient patient = mock(Patient.class);
         given(patientRepository.findByCpf(anyString())).willReturn(Optional.of(patient));
@@ -45,7 +45,7 @@ public class PatientServiceTest {
 
     @DisplayName("Find by CPF - negative scenario")
     @Test
-    public void givenInvalidCpf_whenFindByCpf_thenThrowException() {
+    void givenInvalidCpf_whenFindByCpf_thenThrowException() {
         // Arrange
         given(patientRepository.findByCpf(anyString())).willReturn(Optional.empty());
 

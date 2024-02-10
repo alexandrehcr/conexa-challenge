@@ -1,6 +1,5 @@
 package br.com.conexasaude.challenge.security;
 
-import br.com.conexasaude.challenge.constants.ApiMessages;
 import br.com.conexasaude.challenge.exception.InvalidJwtException;
 import br.com.conexasaude.challenge.security.filter.ExceptionHandlerFilter;
 import br.com.conexasaude.challenge.service.JwtLogService;
@@ -14,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import java.io.IOException;
+
+import static br.com.conexasaude.challenge.constants.apimessages.ExceptionMessages.INVALID_JWT_EXCEPTION;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,7 +31,7 @@ public class CustomLogoutHandler implements LogoutHandler {
                 jwtLogService.revokeToken(jwt);
 
             } else {
-                throw new InvalidJwtException(ApiMessages.INVALID_JWT_EXCEPTION);
+                throw new InvalidJwtException(INVALID_JWT_EXCEPTION);
             }
         } catch (InvalidJwtException e) {
             try {

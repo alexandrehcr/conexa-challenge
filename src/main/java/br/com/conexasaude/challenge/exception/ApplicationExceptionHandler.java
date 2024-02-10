@@ -1,6 +1,5 @@
 package br.com.conexasaude.challenge.exception;
 
-import br.com.conexasaude.challenge.constants.ApiMessages;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +17,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static br.com.conexasaude.challenge.constants.apimessages.ExceptionMessages.HTTP_METHOD_NOT_ALLOWED;
 
 @ControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
@@ -40,7 +41,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         HttpStatus httpStatus = HttpStatus.METHOD_NOT_ALLOWED;
-        String message = String.format(ApiMessages.METHOD_NOT_ALLOWED, ex.getSupportedHttpMethods(), ex.getMethod());
+        String message = String.format(HTTP_METHOD_NOT_ALLOWED, ex.getSupportedHttpMethods(), ex.getMethod());
         return new ResponseEntity<>(new DefaultError(httpStatus, message), httpStatus);
     }
 

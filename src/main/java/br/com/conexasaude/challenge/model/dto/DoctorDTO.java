@@ -1,8 +1,5 @@
 package br.com.conexasaude.challenge.model.dto;
 
-import br.com.conexasaude.challenge.constants.ApiMessages;
-import br.com.conexasaude.challenge.constants.JsonConstants;
-import br.com.conexasaude.challenge.constants.RegexConstants;
 import br.com.conexasaude.challenge.validation.PasswordMatches;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,53 +12,58 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 
+import static br.com.conexasaude.challenge.constants.RegexConstants.REGEX_EMAIL;
+import static br.com.conexasaude.challenge.constants.RegexConstants.REGEX_TEL;
+import static br.com.conexasaude.challenge.constants.apimessages.ValidationConstants.*;
+import static br.com.conexasaude.challenge.constants.json.JsonFields.*;
+import static br.com.conexasaude.challenge.constants.json.JsonPatterns.LOCAL_DATE_PAT;
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@PasswordMatches(message = ApiMessages.PWD_MISMATCH)
+@PasswordMatches(message = PWD_MISMATCH)
 public class DoctorDTO {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = READ_ONLY)
     private Long id;
 
-    @NotBlank(message = ApiMessages.NB_NAME)
-    @JsonProperty(value = JsonConstants.VALUE_FIRST_NAME)
+    @NotBlank(message = NB_NAME)
+    @JsonProperty(value = FIRST_NAME)
     private String firstName;
 
-    @NotBlank(message = ApiMessages.NB_LAST_NAME)
-    @JsonProperty(value = JsonConstants.VALUE_LAST_NAME)
+    @NotBlank(message = NB_LAST_NAME)
+    @JsonProperty(value = LAST_NAME)
     private String lastName;
 
-    @NotBlank(message = ApiMessages.NB_EMAIL)
-    @Email(regexp = RegexConstants.REGEX_EMAIL, message = ApiMessages.INV_EMAIL)
+    @NotBlank(message = NB_EMAIL)
+    @Email(regexp = REGEX_EMAIL, message = INV_EMAIL)
     private String email;
 
-    @NotBlank(message = ApiMessages.NB_PWD)
-    @JsonProperty(value = JsonConstants.VALUE_PASSWORD, access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank(message = NB_PWD)
+    @JsonProperty(value = PASSWORD, access = WRITE_ONLY)
     private String pwd;
 
-    @NotBlank(message = ApiMessages.NB_PWD_CONFIRM)
-    @JsonProperty(value = JsonConstants.VALUE_PASSWORD_CONFIRMATION, access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(value = PASSWORD_CONFIRMATION, access = WRITE_ONLY)
     private String pwdConfirmation;
 
-    @NotBlank(message = ApiMessages.NB_SPECIALTY)
-    @JsonProperty(value = JsonConstants.VALUE_SPECIALTY)
+    @NotBlank(message = NB_SPECIALTY)
+    @JsonProperty(value = SPECIALTY)
     private String specialty;
 
-    @NotNull(message = ApiMessages.INV_CPF)
-    @CPF(message = ApiMessages.INV_CPF)
+    @NotNull(message = INV_CPF)
+    @CPF(message = INV_CPF)
     private String cpf;
 
-    @Past(message = ApiMessages.PAST_DATE)
-    @JsonProperty(value = JsonConstants.VALUE_DATE_OF_BIRTH)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JsonConstants.PATTERN_LOCAL_DATE)
+    @Past(message = PAST_DATE)
+    @JsonProperty(value = DATE_OF_BIRTH)
+    @JsonFormat(shape = STRING, pattern = LOCAL_DATE_PAT)
     private LocalDate dateOfBirth;
 
-    @Pattern(regexp = RegexConstants.REGEX_TEL, message = ApiMessages.INV_TEL)
-    @JsonProperty(value = JsonConstants.VALUE_PHONE_NUMBER)
+    @Pattern(regexp = REGEX_TEL, message = INV_TEL)
+    @JsonProperty(value = PHONE_NUMBER)
     private String phoneNumber;
 }
-
-
-

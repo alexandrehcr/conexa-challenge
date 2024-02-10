@@ -1,7 +1,5 @@
 package br.com.conexasaude.challenge.security.filter;
 
-import br.com.conexasaude.challenge.constants.ApiMessages;
-import br.com.conexasaude.challenge.constants.JsonConstants;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.jsonwebtoken.MalformedJwtException;
@@ -21,9 +19,10 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static br.com.conexasaude.challenge.constants.ApiMessages.*;
 import static br.com.conexasaude.challenge.constants.SecurityConstants.LOGIN_PATH;
 import static br.com.conexasaude.challenge.constants.SecurityConstants.REGISTRATION_PATH;
+import static br.com.conexasaude.challenge.constants.apimessages.ExceptionMessages.*;
+import static br.com.conexasaude.challenge.constants.json.JsonPatterns.LOCAL_DATE_TIME_PAT;
 
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
@@ -31,7 +30,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         if ((request.getRequestURI().equals(LOGIN_PATH) || request.getRequestURI().equals(REGISTRATION_PATH)) && !request.getMethod().equals(HttpMethod.POST.toString())) {
-            setResponse(response, HttpStatus.METHOD_NOT_ALLOWED, String.format(ApiMessages.METHOD_NOT_ALLOWED, "POST", request.getMethod()));
+            setResponse(response, HttpStatus.METHOD_NOT_ALLOWED, String.format(HTTP_METHOD_NOT_ALLOWED, "POST", request.getMethod()));
             return;
         }
 
@@ -62,7 +61,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         response.setCharacterEncoding("UTF-8");
 
         JsonObject json = new JsonObject();
-        json.addProperty("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern(JsonConstants.PATTERN_LOCAL_DATE_TIME)));
+        json.addProperty("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_PAT)));
         json.addProperty("code", httpStatus.value());
         json.addProperty("status", httpStatus.name());
         json.addProperty("message", message);

@@ -1,6 +1,6 @@
 package br.com.conexasaude.challenge.model;
 
-import br.com.conexasaude.challenge.constants.JsonConstants;
+import br.com.conexasaude.challenge.constants.json.JsonPatterns;
 import br.com.conexasaude.challenge.model.dto.AttendanceDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,6 +12,8 @@ import lombok.Setter;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
+
+import static br.com.conexasaude.challenge.constants.json.JsonFields.*;
 
 @Entity
 @Getter
@@ -28,18 +30,18 @@ public class Attendance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonProperty(value = JsonConstants.VALUE_LOCAL_DATE_TIME)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JsonConstants.PATTERN_LOCAL_DATE_TIME)
+    @JsonProperty(value = LOCAL_DATE_TIME)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JsonPatterns.LOCAL_DATE_TIME_PAT)
     @Column(name = "date_time", nullable = false)
     private LocalDateTime localDateTime;
 
     @ManyToOne(optional = false)
-    @JsonProperty(value = JsonConstants.VALUE_DOCTOR)
+    @JsonProperty(value = DOCTOR)
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     private Doctor doctor;
 
     @ManyToOne(optional = false)
-    @JsonProperty(value = JsonConstants.VALUE_PATIENT)
+    @JsonProperty(value = PATIENT)
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
 
@@ -53,5 +55,3 @@ public class Attendance {
         return modelMapper.map(attendance, AttendanceDTO.class);
     }
 }
-
-

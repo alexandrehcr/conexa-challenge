@@ -1,6 +1,6 @@
 package br.com.conexasaude.challenge.service;
 
-import br.com.conexasaude.challenge.constants.ApiMessages;
+import br.com.conexasaude.challenge.constants.apimessages.UniqueConstraintViolationMessages;
 import br.com.conexasaude.challenge.model.Attendance;
 import br.com.conexasaude.challenge.model.Doctor;
 import br.com.conexasaude.challenge.model.Patient;
@@ -52,13 +52,13 @@ public class DoctorService {
         String email = doctorDTO.getEmail();
 
         if (doctorRepository.existsByCpf(cpf) && doctorRepository.existsByEmail(email)) {
-            throw new DataIntegrityViolationException(ApiMessages.EMAIL_AND_CPF_UNIQUE_CONSTRAINT_VIOLATION);
+            throw new DataIntegrityViolationException(UniqueConstraintViolationMessages.EMAIL_AND_CPF_UNIQUE_CONSTRAINT_VIOLATION);
 
         } else if (doctorRepository.existsByCpf(cpf)) {
-            throw new DataIntegrityViolationException(ApiMessages.CPF_UNIQUE_CONSTRAINT_VIOLATION);
+            throw new DataIntegrityViolationException(UniqueConstraintViolationMessages.CPF_UNIQUE_CONSTRAINT_VIOLATION);
 
         } else if (doctorRepository.existsByEmail(email)) {
-            throw new DataIntegrityViolationException(ApiMessages.EMAIL_UNIQUE_CONSTRAINT_VIOLATION);
+            throw new DataIntegrityViolationException(UniqueConstraintViolationMessages.EMAIL_UNIQUE_CONSTRAINT_VIOLATION);
         }
 
         Doctor doctor = new Doctor();

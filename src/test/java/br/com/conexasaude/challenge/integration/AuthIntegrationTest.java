@@ -1,12 +1,15 @@
 package br.com.conexasaude.challenge.integration;
 
-import br.com.conexasaude.challenge.constants.ApiMessages;
+import br.com.conexasaude.challenge.constants.apimessages.ValidationConstants;
 import br.com.conexasaude.challenge.model.dto.AuthenticationRequest;
 import br.com.conexasaude.challenge.repository.DoctorRepository;
 import br.com.conexasaude.challenge.service.JwtLogService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,8 +21,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static br.com.conexasaude.challenge.constants.ApiMessages.INVALID_USERNAME_PASSWORD;
-import static br.com.conexasaude.challenge.constants.JsonConstants.*;
+import static br.com.conexasaude.challenge.constants.apimessages.ExceptionMessages.INVALID_USERNAME_PASSWORD;
+import static br.com.conexasaude.challenge.constants.json.JsonFields.*;
 import static br.com.conexasaude.challenge.util.RemoveMask.removeCpfMask;
 import static br.com.conexasaude.challenge.util.RemoveMask.removePhoneMask;
 import static org.hamcrest.CoreMatchers.is;
@@ -35,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class AuthIntegrationTest {
+class AuthIntegrationTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -62,13 +65,13 @@ public class AuthIntegrationTest {
     class RegistrationTest {
 
         @BeforeEach
-        public void setup() {
+        void setup() {
             doctorRepository.deleteAll();
         }
 
         @DisplayName("Doctor's signup - Positive scenario")
         @Test
-        public void givenValidRegistrationDTO_whenSignup_thenReturnStatusCreated() throws Exception {
+        void givenValidRegistrationDTO_whenSignup_thenReturnStatusCreated() throws Exception {
             // Arrange
             String firstName = "firstName";
             String lastName = "lastName";
@@ -80,15 +83,15 @@ public class AuthIntegrationTest {
             String dateOfBirth = "01/01/1990";
 
             Map<String, String> jsonMap = new TreeMap<>();
-            jsonMap.put(VALUE_FIRST_NAME, firstName);
-            jsonMap.put(VALUE_LAST_NAME, lastName);
-            jsonMap.put(VALUE_EMAIL, email);
-            jsonMap.put(VALUE_PHONE_NUMBER, phoneNumber);
-            jsonMap.put(VALUE_PASSWORD, password);
-            jsonMap.put(VALUE_PASSWORD_CONFIRMATION, password);
-            jsonMap.put(VALUE_SPECIALTY, specialty);
+            jsonMap.put(FIRST_NAME, firstName);
+            jsonMap.put(LAST_NAME, lastName);
+            jsonMap.put(EMAIL, email);
+            jsonMap.put(PHONE_NUMBER, phoneNumber);
+            jsonMap.put(PASSWORD, password);
+            jsonMap.put(PASSWORD_CONFIRMATION, password);
+            jsonMap.put(SPECIALTY, specialty);
             jsonMap.put("cpf", cpf);
-            jsonMap.put(VALUE_DATE_OF_BIRTH, dateOfBirth);
+            jsonMap.put(DATE_OF_BIRTH, dateOfBirth);
 
             String json = buildJsonString(jsonMap);
 
@@ -104,30 +107,30 @@ public class AuthIntegrationTest {
             response.andDo(print()).andExpect(status().isCreated())
                     .andExpectAll(
                             jsonPath("$.id", notNullValue()),
-                            jsonPath("$." + VALUE_FIRST_NAME, is(firstName)),
-                            jsonPath("$." + VALUE_LAST_NAME, is(lastName)),
+                            jsonPath("$." + FIRST_NAME, is(firstName)),
+                            jsonPath("$." + LAST_NAME, is(lastName)),
                             jsonPath("$.email", is(email)),
-                            jsonPath("$." + VALUE_SPECIALTY, is(specialty)),
+                            jsonPath("$." + SPECIALTY, is(specialty)),
                             jsonPath("$.cpf", is(removeCpfMask(cpf))),
-                            jsonPath("$." + VALUE_DATE_OF_BIRTH, is(dateOfBirth)),
-                            jsonPath("$." + VALUE_PHONE_NUMBER, is(removePhoneMask(phoneNumber)))
+                            jsonPath("$." + DATE_OF_BIRTH, is(dateOfBirth)),
+                            jsonPath("$." + PHONE_NUMBER, is(removePhoneMask(phoneNumber)))
                     );
         }
 
         @DisplayName("Doctor's signup - Negative scenario")
         @Test
-        public void givenInvalidRegistrationDTO_whenSignup_thenReturnBadRequestWithErrorMessages() throws Exception {
+        void givenInvalidRegistrationDTO_whenSignup_thenReturnBadRequestWithErrorMessages() throws Exception {
             // Arrange
             Map<String, String> jsonMap = new TreeMap<>();
-            jsonMap.put(VALUE_FIRST_NAME, "");
-            jsonMap.put(VALUE_LAST_NAME, "");
-            jsonMap.put(VALUE_EMAIL, "");
-            jsonMap.put(VALUE_PHONE_NUMBER, "");
-            jsonMap.put(VALUE_PASSWORD, "12345");
-            jsonMap.put(VALUE_PASSWORD_CONFIRMATION, "1234x");
-            jsonMap.put(VALUE_SPECIALTY, "");
+            jsonMap.put(FIRST_NAME, "");
+            jsonMap.put(LAST_NAME, "");
+            jsonMap.put(EMAIL, "");
+            jsonMap.put(PHONE_NUMBER, "");
+            jsonMap.put(PASSWORD, "12345");
+            jsonMap.put(PASSWORD_CONFIRMATION, "1234x");
+            jsonMap.put(SPECIALTY, "");
             jsonMap.put("cpf", "123.123.123-01");
-            jsonMap.put(VALUE_DATE_OF_BIRTH, "01/01/2030");
+            jsonMap.put(DATE_OF_BIRTH, "01/01/2030");
 
             String json = buildJsonString(jsonMap);
 
@@ -145,22 +148,22 @@ public class AuthIntegrationTest {
                     .andExpectAll(
                             jsonPath("$.messages",
                                     containsInAnyOrder(
-                                            ApiMessages.NB_NAME,
-                                            ApiMessages.NB_LAST_NAME,
-                                            ApiMessages.NB_EMAIL,
-                                            ApiMessages.INV_EMAIL,
-                                            ApiMessages.PWD_MISMATCH,
-                                            ApiMessages.NB_SPECIALTY,
-                                            ApiMessages.INV_CPF,
-                                            ApiMessages.INV_TEL,
-                                            ApiMessages.PAST_DATE
+                                            ValidationConstants.NB_NAME,
+                                            ValidationConstants.NB_LAST_NAME,
+                                            ValidationConstants.NB_EMAIL,
+                                            ValidationConstants.INV_EMAIL,
+                                            ValidationConstants.PWD_MISMATCH,
+                                            ValidationConstants.NB_SPECIALTY,
+                                            ValidationConstants.INV_CPF,
+                                            ValidationConstants.INV_TEL,
+                                            ValidationConstants.PAST_DATE
                                     )));
         }
     }
 
     @DisplayName("Login attempt - Positive scenario")
     @Test
-    public void givenRightCredentials_whenLoggingIn_thenReturnOkAndJWT() throws Exception {
+    void givenRightCredentials_whenLoggingIn_thenReturnOkAndJWT() throws Exception {
         // Arrange
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(validEmail, validPassword);
 
@@ -179,7 +182,7 @@ public class AuthIntegrationTest {
 
     @DisplayName("Login attempt - Invalid password")
     @Test
-    public void givenInvalidPrincipal_whenLoggingIn_thenReturnUnauthorized() throws Exception {
+    void givenInvalidPrincipal_whenLoggingIn_thenReturnUnauthorized() throws Exception {
         // Arrange
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(validEmail, invalidPassword);
 
@@ -198,7 +201,7 @@ public class AuthIntegrationTest {
 
     @DisplayName("Login attempt - Invalid username")
     @Test
-    public void givenInvalidCredentials_whenLoggingIn_thenReturnUnauthorized() throws Exception {
+    void givenInvalidCredentials_whenLoggingIn_thenReturnUnauthorized() throws Exception {
         // Arrange
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(invalidEmail, validPassword);
 
@@ -217,7 +220,7 @@ public class AuthIntegrationTest {
 
     @DisplayName("Logoff")
     @Test
-    public void givenValidJwt_whenLogoff_thenInvalidateJwt() throws Exception {
+    void givenValidJwt_whenLogoff_thenInvalidateJwt() throws Exception {
         // Arrange
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(validEmail, validPassword);
 
